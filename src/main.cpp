@@ -32,23 +32,27 @@ void setup() {
 
 void loop() {
     
-    // Client loop for AWS IoT
+    Serial.println("[LOOP] --- New loop iteration ---");
+    Serial.print("[MEM] Free heap (start): ");
+    Serial.println(ESP.getFreeHeap());
+
     clientLoop();
 
-
-    // read Ultra Sonic
+    Serial.println("[SENSOR] Reading sensors...");
     float distance = readUltrasonicCM(1.0, 0);
-    if (distance != -1) {
-        Serial.print("Distance: ");
-        Serial.print(distance);
-        Serial.println(" cm");
-    }
+    float temp = readSensorData_DHT_T();
+    float hum = readSensorData_DHT_H();
+    int soil = readSensorData_SoilMoisture();
+    Serial.print("[SENSOR] Distance: "); Serial.println(distance);
+    Serial.print("[SENSOR] Temperature: "); Serial.println(temp);
+    Serial.print("[SENSOR] Humidity: "); Serial.println(hum);
+    Serial.print("[SENSOR] Soil Moisture: "); Serial.println(soil);
 
-    Serial.print("Distance: ");
-    Serial.print(distance);
-    Serial.println(" cm");
-
-    // Read sensor data and publish to AWS IoT
-    publishMessage(readSensorData_DHT_H(), readSensorData_DHT_T(), readSensorData_SoilMoisture());
+    Serial.println("[AWS] Publishing message to AWS IoT...");
+    publishMessage(hum, temp, soil);
+    Serial.println("[AWS] Message published.");
     delay(1000);
+
+    Serial.print("[MEM] Free heap (end): ");
+    Serial.println(ESP.getFreeHeap());
 }

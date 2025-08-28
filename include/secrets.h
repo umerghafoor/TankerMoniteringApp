@@ -1,7 +1,7 @@
 #include <pgmspace.h>
  
 #define SECRET
-#define THINGNAME "TankerMangment"                         //change this
+#define THINGNAME "TankerManagement"                         //change this
  
 const char WIFI_SSID[] = "";               //change this
 const char WIFI_PASSWORD[] = "";           //change this
@@ -10,38 +10,14 @@ const char AWS_IOT_ENDPOINT[] = "a3aap03cjx0go8-ats.iot.us-east-1.amazonaws.com"
 // Amazon Root CA 1
 static const char AWS_CERT_CA[] PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----
-MIIDQTCCAimgAwIBAgITBmyfz5m/jAo54vB4ikPmljZbyjANBgkqhkiG9w0BAQsF
-ADA5MQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRkwFwYDVQQDExBBbWF6
-b24gUm9vdCBDQSAxMB4XDTE1MDUyNjAwMDAwMFoXDTM4MDExNzAwMDAwMFowOTEL
-MAkGA1UEBhMCVVMxDzANBgNVBAoTBkFtYXpvbjEZMBcGA1UEAxMQQW1hem9uIFJv
-b3QgQ0EgMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALJ4gHHKeNXj
-ca9HgFB0fW7Y14h29Jlo91ghYPl0hAEvrAIthtOgQ3pOsqTQNroBvo3bSMgHFzZM
-9O6II8c+6zf1tRn4SWiw3te5djgdYZ6k/oI2peVKVuRF4fn9tBb6dNqcmzU5L/qw
-IFAGbHrQgLKm+a/sRxmPUDgH3KKHOVj4utWp+UhnMJbulHheb4mjUcAwhmahRWa6
-VOujw5H5SNz/0egwLX0tdHA114gk957EWW67c4cX8jJGKLhD+rcdqsq08p8kDi1L
-93FcXmn/6pUCyziKrlA4b9v7LWIbxcceVOF34GfID5yHI9Y/QCB/IIDEgEw+OyQm
-jgSubJrIqg0CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMC
-AYYwHQYDVR0OBBYEFIQYzIU07LwMlJQuCFmcx7IQTgoIMA0GCSqGSIb3DQEBCwUA
-A4IBAQCY8jdaQZChGsV2USggNiMOruYou6r4lK5IpDB/G/wkjUu0yKGX9rbxenDI
-U5PMCCjjmCXPI6T53iHTfIUJrU6adTrCC2qJeHZERxhlbI1Bjjt/msv0tadQ1wUs
-N+gDS63pYaACbvXy8MWy7Vu33PqUXHeeE6V/Uq2V8viTO96LXFvKWlJbYK8U90vv
-o/ufQJVtMVT8QtPHRh8jrdkPSHCa2XV4cdFyQzR1bldZwgJcJmApzyMZFo6IQ6XU
-5MsI+yMRQ+hDKXJioaldXgjUkK642M4UwtBV8ob2xJNDd2ZhwLnoQdeXeGADbkpy
-rqXRfboQnoZsG4q5WTP468SQvvG5
 -----END CERTIFICATE-----
 )EOF";
  
 // Device Certificate                                               //change this
 static const char AWS_CERT_CRT[] PROGMEM = R"KEY(
 -----BEGIN CERTIFICATE-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtuotoxGlK9y5biIdFLxV
-71MJ+4N1t22otnS0wSwbAkxH+R9GME5zpHI7nAsr025FwgQsgr3kt+CxVL93/f4G
-pOffVSRMkNvXQoCkWSSmybOGLi7ifwJnz3KHhIfnES/M/9OIWGXc0rsPWn9ZuhJz
-IU2WilgoJy9rs0a+9H7xclA3WoGt5nXdiRXlC+iGNxFD5n81sauv6vaKlRAl7cvu
-01q8bHIGU4tIuMWSAv2BqN7WJ+l5fv8nW8HVlVTDmOwGFgq20qPZySRefeGN2uIU
-4wOIU7178VkZt7l/kqdRDFlHl0fIgYN9ywCRvesnvOcIzlBKB2bpgUq4RHYDXPCC
-HQIDAQAB
 -----END CERTIFICATE-----
+
  
  
 )KEY";
@@ -49,31 +25,6 @@ HQIDAQAB
 // Device Private Key                                               //change this
 static const char AWS_CERT_PRIVATE[] PROGMEM = R"KEY(
 -----BEGIN RSA PRIVATE KEY-----
-MIIEpQIBAAKCAQEAtuotoxGlK9y5biIdFLxV71MJ+4N1t22otnS0wSwbAkxH+R9G
-ME5zpHI7nAsr025FwgQsgr3kt+CxVL93/f4GpOffVSRMkNvXQoCkWSSmybOGLi7i
-fwJnz3KHhIfnES/M/9OIWGXc0rsPWn9ZuhJzIU2WilgoJy9rs0a+9H7xclA3WoGt
-5nXdiRXlC+iGNxFD5n81sauv6vaKlRAl7cvu01q8bHIGU4tIuMWSAv2BqN7WJ+l5
-fv8nW8HVlVTDmOwGFgq20qPZySRefeGN2uIU4wOIU7178VkZt7l/kqdRDFlHl0fI
-gYN9ywCRvesnvOcIzlBKB2bpgUq4RHYDXPCCHQIDAQABAoIBAQCrYSZ5TyMOwbQL
-eHL+5qctoQQNX9J/loMo0Jg7FfQIZyhYRfEheZ/oSA+J2P2rD/rUGc0Kgpk1n5UG
-7o6ir8vR3l7mCyih4RkC+j0COND80vO5ebxFfB9/wrMufZcGB19vouZwzJ/l4dY0
-2HVdXcP5RBT0cjzM2iVyx6pKslXO37nkl/+9d0GywyGNErO9FIevhiVSzS8b9iTw
-Lp6NqzGwpFMnmgmMbSvsk1R2pKIyVqiUdr2+DvdVngQISHYRH+agqykX9eJm7Fnb
-FN6rgQ/iKeFFIPJElnUWy44fEQ7Bw1HR/q8gicktYdwYBcdf1WhK4cPzpbaKVf2s
-mal0H98RAoGBAPD1bHiN6mWtZaJyw4L1gpWTfKytxkeq3ibI7rtEppAa/76flbm4
-nxHsy2Xuq6fRyqYv084WkY6rDAT33Kige48ueG+O+adXh6hRxohGt+1UKfhocDkH
-3imKqVbfBSLnbFRTDJa9Igz/vjirsfNBrRs9rfOm7hiNLhEe8ZUuzut7AoGBAMJV
-MvDqlaTxXUsnAo5J2Cu7GLpfn2zIFh468oLXId7hFmsyrpFRiPiaYnZZFrq+LWgb
-CpIOcGixa/K1dulZ+LqKtaRKBddFNT9r9wbYOOps5+xHA1IQhEljxpyxKzg4wwtK
-sxfjdjITzkHQ/n1iTvTZ86xay4WxTcxfzeGse6lHAoGBAN4gcOlFckJfMaUqhJ9y
-MfovZyxMWc/xbS915dXOuHl52i7hMIZv8nv0vaBu/+EJ3fWLe4ateWt6tO7Ti6AL
-qTvaC/5TYEPqxczd7dXs01s+Th6IMIPyg9Pp1qeVmkeN7Whi0uUW34/6JmJZrQbh
-kXHeT0CgrzcE1uXDj9MFvoyHAoGBAKXWPSWYmuFqVDoI7UZtv/r5rA2IAq27RhzA
-IyoC2tWvcglC8/PxB5lXbkUem6X7GxanVOr1RXoiRkOWFgbnD7ppGr87qCZf2iPo
-R6Ngq5lqHLTmmO/URn+2lMws6PwOfGvLcHAnXTs46aAC8NohJc4PnMFtrhbGCuUo
-sLIwFkuLAoGACz8IoIn6zGu6XHxakcXzfiOVsqnAvYTbw7a3f32x0Saql78IsdAu
-wfm0KC2yiHfzOkgOsf/ZT61USRe1Qbsg+PiJIxy9rMl+1BmShpcnhu1HsnquDNHT
-WmIaT4xW9RTWOFfj35BaQfP0S3cYWJ+8pVipNLPpglyXXBWDv3RsRAw=
 -----END RSA PRIVATE KEY-----
 
  

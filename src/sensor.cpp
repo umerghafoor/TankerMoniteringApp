@@ -5,11 +5,11 @@
 
 // Define ultrasonic sensor pins if not defined in config.h
 #ifndef TRIG_PIN
-#define TRIG_PIN 10 // Change 23 to your actual trigger pin number
+#define TRIG_PIN 22 // Change 23 to your actual trigger pin number
 #endif
 
 #ifndef ECHO_PIN
-#define ECHO_PIN 11 // Change 22 to your actual echo pin number
+#define ECHO_PIN 23 // Change 22 to your actual echo pin number
 #endif
 
 DHT dht(DHTPIN, DHTTYPE);

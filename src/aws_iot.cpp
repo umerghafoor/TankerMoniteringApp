@@ -155,3 +155,4 @@ void publishMessage(float h, float t, int soilMoisture) {
 
     client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
 }
+
