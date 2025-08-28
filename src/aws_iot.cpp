@@ -125,7 +125,7 @@ void clientLoop() {
  * typically expressed as a percentage representing the ratio of the volume of water in the soil to the
  * total volume of the soil. In the context of your code snippet, the `soilMoisture` parameter is
  */
-void publishMessage(float h, float t, int soilMoisture) {
+void publishMessage(float h, float t, int distance) {
     // Update time before publishing
     now = time(nullptr);
     gmtime_r(&now, &timeinfo);
@@ -134,7 +134,7 @@ void publishMessage(float h, float t, int soilMoisture) {
     JsonDocument doc;
     doc["humidity"] = h;
     doc["temperature"] = t;
-    doc["soilMoisture"] = soilMoisture;
+    doc["distance"] = distance;
     doc["timestamp"] = asctime(&timeinfo);
 
     // Debugging: Print data to serial
@@ -147,8 +147,8 @@ void publishMessage(float h, float t, int soilMoisture) {
     Serial.print("Temperature: ");
     Serial.println(t);
 
-    Serial.print("Soil Moisture: ");
-    Serial.println(soilMoisture);
+    Serial.print("Distance: ");
+    Serial.println(distance);
 
     char jsonBuffer[512];
     serializeJson(doc, jsonBuffer);

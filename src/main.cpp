@@ -49,7 +49,7 @@ void loop() {
     Serial.print("[SENSOR] Soil Moisture: "); Serial.println(soil);
 
     Serial.println("[AWS] Publishing message to AWS IoT...");
-    publishMessage(hum, temp, soil);
+    publishMessage(hum, temp, distance);
     Serial.println("[AWS] Message published.");
     delay(1000);
 
