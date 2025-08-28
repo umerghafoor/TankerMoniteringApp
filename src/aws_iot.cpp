@@ -156,3 +156,6 @@ void publishMessage(float h, float t, int distance) {
     client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
 }
 
+bool clientIsConnected() {
+    return client.connected();
+}

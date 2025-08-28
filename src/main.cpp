@@ -36,6 +36,13 @@ void loop() {
     Serial.print("[MEM] Free heap (start): ");
     Serial.println(ESP.getFreeHeap());
 
+    Serial.print("Client connection status: ");
+    Serial.println(clientIsConnected());
+
+    if(!clientIsConnected()) {
+        connectAWS();
+    }
+    
     clientLoop();
 
     Serial.println("[SENSOR] Reading sensors...");
