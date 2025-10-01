@@ -9,5 +9,5 @@ void NTPConnect();
 
 void clientLoop();
 void messageHandler(char *topic, byte *payload, unsigned int length);
-void publishMessage(float h, float t, int distance);
+bool publishMessage(float h, float t, int distance);
 bool clientIsConnected();

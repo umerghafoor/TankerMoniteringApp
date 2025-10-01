@@ -60,6 +60,7 @@ void connectAWS() {
 
     while (!client.connected()) {
         Serial.print("Attempting MQTT connection...");
+        client.disconnect();
         if (client.connect(THINGNAME)) {
             Serial.println("connected");
             if (client.subscribe(AWS_IOT_SUBSCRIBE_TOPIC)) {
@@ -125,7 +126,7 @@ void clientLoop() {
  * typically expressed as a percentage representing the ratio of the volume of water in the soil to the
  * total volume of the soil. In the context of your code snippet, the `soilMoisture` parameter is
  */
-void publishMessage(float h, float t, int distance) {
+bool publishMessage(float h, float t, int distance) {
     // Update time before publishing
     now = time(nullptr);
     gmtime_r(&now, &timeinfo);
@@ -153,7 +154,7 @@ void publishMessage(float h, float t, int distance) {
     char jsonBuffer[512];
     serializeJson(doc, jsonBuffer);
 
-    client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
+    return client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
 }
 
 bool clientIsConnected() {
