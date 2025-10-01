@@ -32,34 +32,53 @@ void setup() {
 
 void loop() {
     
-    Serial.println("[LOOP] --- New loop iteration ---");
-    Serial.print("[MEM] Free heap (start): ");
-    Serial.println(ESP.getFreeHeap());
+    static unsigned long lastPublish = 0;
+    const unsigned long publishInterval = 5000; // 5 seconds
 
-    Serial.print("Client connection status: ");
-    Serial.println(clientIsConnected());
+    // Serial.println("[LOOP] --- New loop iteration ---");
+    // Serial.print("[MEM] Free heap (start): ");
+    ESP.getFreeHeap();
 
-    if(!clientIsConnected()) {
-        connectAWS();
-    }
-    
+    // Maintain MQTT connection and call client.loop() as often as possible
     clientLoop();
+    if (!clientIsConnected()) {
+        Serial.println("[AWS] MQTT not connected, reconnecting...");
+        connectAWS();
+        extern WiFiClientSecure net;
+        extern PubSubClient client;
+        Serial.print("[AWS] MQTT client state: ");
+        Serial.println(client.state());
+    }
 
-    Serial.println("[SENSOR] Reading sensors...");
-    float distance = readUltrasonicCM(1.0, 0);
-    float temp = readSensorData_DHT_T();
-    float hum = readSensorData_DHT_H();
-    int soil = readSensorData_SoilMoisture();
-    Serial.print("[SENSOR] Distance: "); Serial.println(distance);
-    Serial.print("[SENSOR] Temperature: "); Serial.println(temp);
-    Serial.print("[SENSOR] Humidity: "); Serial.println(hum);
-    Serial.print("[SENSOR] Soil Moisture: "); Serial.println(soil);
+    // Only publish at intervals
+    if (millis() - lastPublish >= publishInterval) {
+        Serial.println("[SENSOR] Reading sensors...");
+        float distance = readUltrasonicCM(1.0, 0);
+        // Skip DHT for now
+        float temp = 0;
+        float hum = 0;
+        int soil = readSensorData_SoilMoisture();
+        Serial.print("[SENSOR] Distance: "); Serial.println(distance);
+        Serial.print("[SENSOR] Temperature: "); Serial.println(temp);
+        Serial.print("[SENSOR] Humidity: "); Serial.println(hum);
+        Serial.print("[SENSOR] Soil Moisture: "); Serial.println(soil);
 
-    Serial.println("[AWS] Publishing message to AWS IoT...");
-    publishMessage(hum, temp, distance);
-    Serial.println("[AWS] Message published.");
-    delay(1000);
+        if (clientIsConnected()) {
+            Serial.println("[AWS] Publishing message to AWS IoT...");
+            if (publishMessage(hum, temp, distance)) {
+                Serial.println("[AWS] Message published.");
+            } else {
+                Serial.println("[AWS] Message publish failed.");
+            }
+        } else {
+            Serial.println("[AWS] Not connected, skipping publish.");
+        }
+        lastPublish = millis();
+    }
 
-    Serial.print("[MEM] Free heap (end): ");
-    Serial.println(ESP.getFreeHeap());
+    // Short delay to yield to WiFi/MQTT stack
+    delay(10);
+
+    // Serial.print("[MEM] Free heap (end): ");
+    ESP.getFreeHeap();
 }
